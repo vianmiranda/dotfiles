@@ -1,0 +1,81 @@
+set nocompatible           " Vim defaults rather than vi ones. Keep at top.
+filetype plugin indent on  " Enable filetype-specific settings.
+syntax on                  " Enable syntax highlighting.
+set backspace=2            " Make the backspace behave as most applications.
+set autoindent             " Use current indent for new lines.
+set display=lastline       " Show as much of the line as will fit.
+set wildmenu               " Better tab completion in the commandline.
+set wildmode=list:longest  " List all matches and complete to the longest match.
+set showcmd                " Show (partial) command in bottom-right.
+set smarttab               " Backspace removes 'shiftwidth' worth of spaces.
+"set number                 " Show line numbers.
+set wrap                   " Wrap long lines.
+set laststatus=2           " Always show the statusline.
+set ruler                  " Show the ruler in the statusline.
+set textwidth=80           " Wrap at n characters.
+set nrformats-=octal       " Remove octal support from 'nrformats'.
+set tabstop=4              " Size of a Tab character.
+set shiftwidth=0           " Use same value as 'tabstop'.
+set softtabstop=-1         " Use same value as 'shiftwidth'
+set noerrorbells
+"set nu
+set smartindent
+set expandtab
+"set nowrap
+set smartcase
+set noswapfile
+set nobackup
+set undofile
+set incsearch
+
+let &t_SI = "\e[6 q"
+let &t_EI = "\e[2 q"
+
+""" Hybrid line numbers
+set number relativenumber
+set nu rnu
+
+""" Custom sets
+set cursorline         " highlight current line
+set background=dark    " configure Vim to use brighter colors
+set autoread           " autoreload the file in Vim if it has been changed outside of Vim
+
+""" So that I don't have to hit esc
+"inoremap <C-j><C-k> <Esc>
+"inoremap <C-k><C-j> <Esc>
+
+""" Make basic movements work better with wrapped lines
+nnoremap j gj
+nnoremap gj j
+nnoremap k gk
+nnoremap gk k
+
+""" Normal navigation in insert mode
+"inoremap <C-k> <C-o>gk
+"inoremap <C-h> <Left>
+"inoremap <C-l> <Right>
+"inoremap <C-j> <C-o>gj
+
+""" Make backspace delete in normal
+nnoremap <BS>    <BS>x
+xnoremap <BS>    x
+
+""" Make visual selection more visible
+hi visual term=reverse cterm=reverse guibg=darkGray
+
+set colorcolumn=80,120,160
+
+""" Make deleting words in insert mode more intuitive
+"imap <C-BS> <C-W>
+"noremap! <C-BS> <C-w>
+"noremap! <C-h> <C-w>
+imap <Esc><BS> <C-w>
+
+
+""" I agree with primeagen, ctrl + c == esc
+imap <C-c> <Esc>
+
+""" Backup directory
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
