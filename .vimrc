@@ -76,6 +76,6 @@ imap <Esc><BS> <C-w>
 imap <C-c> <Esc>
 
 """ Backup directory
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
-set undodir=~/.vim/undo//
+set backupdir=~/.vim/backup/
+set directory=~/.vim/swap/
+set undodir=~/.vim/undo/
