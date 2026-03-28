@@ -7,4 +7,5 @@ fi
 source ${ZIM_HOME}/init.zsh
 
 alias glp='git log --pretty=format:"%C(yellow)%h%Creset - %C(green)%an%Creset, %ar : %s"'
-
+alias gs='git status'
+alias bu='brew update && brew upgrade && brew upgrade --cask && brew cleanup'
