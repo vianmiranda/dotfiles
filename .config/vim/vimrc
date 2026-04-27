@@ -76,7 +76,12 @@ imap <Esc><BS> <C-w>
 """ I agree with primeagen, ctrl + c == esc
 imap <C-c> <Esc>
 
-""" Backup directory
-set backupdir=~/.vim/backup/
-set directory=~/.vim/swap/
-set undodir=~/.vim/undo/
+""" XDG data directories
+if empty($XDG_DATA_HOME)
+  let $XDG_DATA_HOME = $HOME . '/.local/share'
+endif
+set backupdir=$XDG_DATA_HOME/vim/backup//
+set directory=$XDG_DATA_HOME/vim/swap//
+set undodir=$XDG_DATA_HOME/vim/undo//
+set viminfo+=n$XDG_DATA_HOME/vim/viminfo
+
