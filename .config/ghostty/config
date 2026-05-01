@@ -1,4 +1,5 @@
 theme = deep
 macos-option-as-alt = true
-background-opacity = 0.95
 quit-after-last-window-closed = true
+background-opacity = 0.90
+background-blur-radius = 50
