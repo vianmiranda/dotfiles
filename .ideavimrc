@@ -1,0 +1,18 @@
+source ~/.vimrc
+
+map <c-x> <Action>(QuickJavaDoc)
+map <c-S-x> <Action>(ShowErrorDescription)
+
+""" Error navigation
+map ]g <Action>(GotoNextError)
+map [g <Action>(GotoPreviousError)
+
+""" Git hunk navigation, mirroring vim-gitgutter's default maps in ~/.config/vim/vimrc.
+""" IdeaVim can't load vim plugins, so these call IntelliJ's own VCS actions
+""" (action IDs verified against the installed IDE).
+map ]c <Action>(VcsShowNextChangeMarker)
+map [c <Action>(VcsShowPrevChangeMarker)
+
+""" Closest equivalents to gitgutter's <Leader>hp / hu.
+map <Leader>hp <Action>(VcsShowCurrentChangeMarker)
+map <Leader>hu <Action>(Vcs.RollbackChangedLines)

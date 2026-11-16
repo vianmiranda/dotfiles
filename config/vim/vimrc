@@ -27,6 +27,7 @@ set noswapfile
 set nobackup
 set undofile
 set incsearch
+set mouse=a
 
 let &t_SI = "\e[6 q"
 let &t_EI = "\e[2 q"
@@ -34,6 +35,11 @@ let &t_EI = "\e[2 q"
 """ Hybrid line numbers
 set number relativenumber
 set nu rnu
+
+" Hot pink line numbers. 
+" Lines with git changes override this due to gitgutter 
+highlight LineNr ctermfg=205 guifg=#FF69B4
+highlight CursorLineNr ctermfg=200 cterm=bold,underline guifg=#FF00D7 gui=bold,underline
 
 """ Custom sets
 set cursorline         " highlight current line
@@ -85,4 +91,27 @@ set directory=$XDG_DATA_HOME/vim/swap//
 set undodir=$XDG_DATA_HOME/vim/undo//
 set viminfo+=n$XDG_DATA_HOME/vim/viminfo
 let g:netrw_home = $XDG_DATA_HOME . '/vim'
+" Plugins are cloned by install.sh into $XDG_DATA_HOME/vim/pack, outside the repo.
+set packpath^=$XDG_DATA_HOME/vim
+
+
+""" Git diff signs (vim-gitgutter, cloned by install.sh)
+" Colour the line number itself rather than adding a gutter column.
+" g:gitgutter_highlight_linenrs works via the signs' numhl, so the signs are
+" still placed -- just with no text, and signcolumn=no hides the column.
+" Both of these must be set here, before the plugin loads: setting them at
+" runtime needs :GitGutterSignsDisable / :GitGutterLineNrHighlightsEnable.
+set signcolumn=no
+set updatetime=100         " How fast signs refresh after a change (default 4000).
+let g:gitgutter_signs = 0
+let g:gitgutter_highlight_linenrs = 1
+
+" Applied as the *background* of the number cell so it reads as a solid bar.
+" termguicolors is off, so the cterm values are what render; the gui values are
+" the exact equivalents of those 256-colour slots, foreground included, so the
+" colours don't shift if termguicolors is ever enabled.
+highlight GitGutterAddLineNr          ctermbg=118 ctermfg=196 guibg=#87FF00 guifg=#FF0000
+highlight GitGutterChangeLineNr       ctermbg=208 ctermfg=19 guibg=#FF8700 guifg=#0000AF
+highlight GitGutterDeleteLineNr       ctermbg=196 ctermfg=118 guibg=#FF0000 guifg=#87FF00
+highlight GitGutterChangeDeleteLineNr ctermbg=208 ctermfg=19 guibg=#FF8700 guifg=#0000AF
 
