@@ -21,17 +21,6 @@ zmodule utility
 # for any caveats.
 
 #
-# Prompt
-#
-
-# Exposes how long the last command took to run to prompts.
-zmodule duration-info
-# Exposes git repository status information to prompts.
-zmodule git-info
-# A heavily reduced, ASCII-only version of the Spaceship and Starship prompts.
-zmodule asciiship
-
-#
 # Completion
 #
 
@@ -45,6 +34,9 @@ zmodule completion
 # Modules that must be initialized last
 #
 
+# For vi mode in zsh
+zmodule jeffreytse/zsh-vi-mode
+
 # Fish-like syntax highlighting for Zsh, must be sourced after completion.
 zmodule zsh-users/zsh-syntax-highlighting
 # Fish-like history search for Zsh, must be sourced after
@@ -53,6 +45,8 @@ zmodule zsh-users/zsh-history-substring-search
 # Fish-like autosuggestions for Zsh. Add the following to your ~/.zshrc to boost
 # performance: ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 zmodule zsh-users/zsh-autosuggestions
+# Fzf reverse search
+zmodule fzf
 
 # themes https://zimfw.sh/docs/themes/
 zmodule duration-info
