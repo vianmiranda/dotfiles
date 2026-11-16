@@ -3,10 +3,15 @@ set -eu
 
 DOTFILES="$(cd "$(dirname "$0")" && pwd)"
 
+# Safe to re-run at any time: links and dirs are idempotent, and everything
+# installed here (formulae, TPM, tmux/vim/zim plugins) is upgraded to latest.
+
 # Brew formulae required by these dotfiles
 FORMULAE="git tmux fzf sesh zoxide zimfw"
 
 if command -v brew >/dev/null 2>&1; then
+    # brew install also upgrades formulae that are already installed but
+    # outdated (unless HOMEBREW_NO_INSTALL_UPGRADE is set).
     # shellcheck disable=SC2086
     brew install $FORMULAE
 else
@@ -45,14 +50,24 @@ link() {
 # Top-level files
 # .zshenv lives inside $ZDOTDIR so every zsh re-reads it; ~/.zshenv is just a
 # bootstrap pointer for the first shell where ZDOTDIR isn't set yet.
-link .config/zsh/.zshenv "$HOME/.zshenv"
+link config/zsh/.zshenv "$HOME/.zshenv"
+link .ideavimrc          "$HOME/.ideavimrc"
 
-# .config directories
-link .config/git     "$HOME/.config/git"
-link .config/ghostty "$HOME/.config/ghostty"
-link .config/tmux    "$HOME/.config/tmux"
-link .config/vim     "$HOME/.config/vim"
-link .config/zsh     "$HOME/.config/zsh"
+# config directories -> ~/.config
+link config/git     "$HOME/.config/git"
+link config/ghostty "$HOME/.config/ghostty"
+link config/tmux    "$HOME/.config/tmux"
+link config/vim     "$HOME/.config/vim"
+link config/zsh     "$HOME/.config/zsh"
+
+# >>> BEGIN claudeteam >>>
+# Opt-in agent-teams config for Claude Code.
+# Deliberately NOT ~/.claude: that is Claude Code's own config dir and holds
+# sessions, projects, history and a machine-managed settings.json. Nothing
+# here is auto-discovered - every file is reached by an explicit path from
+# the claudeteam() function in .zshrc, so it can live under XDG.
+link config/claude "$HOME/.config/claude"
+# <<< END claudeteam <<<
 
 # Runtime data dirs — kept out of the dotfiles tree so they don't pollute
 # the symlinked $ZDOTDIR / $XDG_CONFIG_HOME paths.
@@ -67,11 +82,38 @@ mkdir -p \
     "$XDG_DATA_HOME/vim/swap" \
     "$XDG_DATA_HOME/vim/undo"
 
-# TPM (tmux plugin manager) — installed under $XDG_DATA_HOME so plugins
-# don't land inside the dotfiles repo.
+# Clone $1 into $2, or fast-forward it if it's already there.
+# --ff-only so local edits to a plugin surface as a warning instead of a merge.
+sync() {
+    if [ -d "$2/.git" ]; then
+        printf '==> %s\n' "$2"
+        git -C "$2" pull --ff-only || printf 'warning: could not fast-forward %s\n' "$2" >&2
+    else
+        git clone "$1" "$2"
+    fi
+}
+
+# Plugins live under $XDG_DATA_HOME, not in the repo; the repo only holds
+# config. Versions float: every run pulls upstream HEAD.
+
+# TPM (tmux plugin manager). tmux.conf points TMUX_PLUGIN_MANAGER_PATH here.
 TPM_DIR="$XDG_DATA_HOME/tmux/plugins/tpm"
-if [ ! -d "$TPM_DIR" ]; then
-    git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
-    printf 'installed TPM - run prefix + I inside tmux to install plugins\n'
+sync https://github.com/tmux-plugins/tpm "$TPM_DIR"
+
+# TPM's scripts talk to a running tmux server, so they only work inside tmux.
+if [ -n "${TMUX:-}" ]; then
+    "$TPM_DIR/bin/install_plugins"
+    "$TPM_DIR/bin/update_plugins" all
+else
+    printf 'skipped tmux plugins: rerun inside tmux, or use prefix + I / prefix + U\n' >&2
 fi
+
+# Vim plugins (native packages). vimrc prepends $XDG_DATA_HOME/vim to packpath.
+# Add a plugin: one sync line, into pack/<group>/start/<name>.
+VIM_PACK="$XDG_DATA_HOME/vim/pack"
+sync https://github.com/airblade/vim-gitgutter "$VIM_PACK/git/start/vim-gitgutter"
+
+# zim modules. zimfw is a function defined by zim's init.zsh, so it needs an
+# interactive zsh (which also installs any modules newly added to .zimrc).
+zsh -ic 'zimfw update' || printf 'warning: zimfw update failed\n' >&2
 
