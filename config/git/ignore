@@ -1,16 +1,24 @@
+# Global gitignore — applies to all repos
+
 .DS_Store
 
 # Claude Code
 **/.claude/settings.local.json
 
+# Aider
+#.aider*
+
+# JetBrains IDEs
+#.idea/
+
 # tmux plugins (installed by TPM at runtime)
-.config/tmux/plugins/
+config/tmux/plugins/
 
 # zsh runtime files
-.config/zsh/.zcompdump
-.config/zsh/.zcompdump.dat
-.config/zsh/.zcompdump.zwc
-.config/zsh/.zim/
-.config/zsh/.zsh_history
-.config/zsh/.zcompcache/
-.config/zsh/completions/
+config/zsh/.zcompdump
+config/zsh/.zcompdump.dat
+config/zsh/.zcompdump.zwc
+config/zsh/.zim/
+config/zsh/.zsh_history
+config/zsh/.zcompcache/
+config/zsh/completions/
